@@ -66,7 +66,7 @@ class Palm:
 
     @property
     def angle(self):
-        print("Getting Angle Value")
+        print("Getting Palm Angle Value")
         return self._angle
 
     @angle.setter

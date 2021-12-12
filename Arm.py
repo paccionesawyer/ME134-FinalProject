@@ -34,7 +34,7 @@ class Arm:
         self.stepper = miniStepper(stepperPins)
 
         self._angle = 0
-        self._dist  = 0
+        self._length  = 0
 
         # TODO dynamically change palm servopin
         self.palm = Palm(3, self.servoKit)
@@ -59,7 +59,7 @@ class Arm:
         # add threshold distance
         self.servoKit.servo[self.servoPin].angle = self.angles[index]
         
-    def distToDegree(self):
+    def distToDegree(self, distance):
         '''
         Convert a distance that the arm needs to move, to the associated degs to turn the stepper motor
         '''
@@ -90,12 +90,57 @@ class Arm:
         self.palm.open()
         self.palm.close()
 
+    @property
+    def angle(self):
+        print("Getting Arm Angle Value")
+        return self._angle
+
+    @angle.setter
+    def angle(self, value):
+        if isinstance(value, int):
+            raise ValueError("angle should be an integer value")
+        elif value < 0:
+            raise ValueError("Angle Below 0 is Impossible")
+        elif value > 180:
+            raise ValueError("Angle Above 180 is Impossible")
+        else:
+            self._angle = value
+            self.servoKit.servo[self.servoPin].angle = 0
+
+    @angle.deleter
+    def angle(self):
+        del self._angle
+
+    @property
+    def length(self):
+        print("Getting Length Value")
+        return self._length
+
+    @length.setter
+    def length(self, value):
+        if isinstance(value, int):
+            raise ValueError("Distance should be an integer value")
+        elif value < 0:
+            raise ValueError("Distance below 0 is impossible")
+        elif value > 10000:
+            raise ValueError("Your Distance Sensor is Messed Up Sir")
+        else:
+            self._length = value
+
+    @length.deleter
+    def length(self):
+        del self._length
+
 if __name__ == "__main__":
     army = Arm()
 
+    # while True:
+    #     army.sweep()
+    #     army.locateBar()
+    #     wait = input("Press Enter To Redo")
+    #     army.resetArm()
+    #     time.sleep(3)
+
     while True:
-        army.sweep()
-        army.locateBar()
-        wait = input("Press Enter To Redo")
-        army.resetArm()
-        time.sleep(3)
+        dist = int(input("How far would you like to extend?"))
+        army.extend(army.distToDegree(dist))
