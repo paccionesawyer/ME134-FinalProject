@@ -11,7 +11,7 @@ class miniStepper(object):
         self.P2 = Pins[1]
         self.P3 = Pins[2]
         self.P4 = Pins[3]
-        self.motor_channel = (P1,P2,P3,P4)
+        self.motor_channel = (self.P1,self.P2,self.P3,self.P4)
         self.time = 0.001
         for pin in self.motor_channel:
             GPIO.setup(pin, GPIO.OUT)

@@ -1,4 +1,4 @@
-from Arm import*
+from Arm import Arm 
 
 rightArmStepper = [11,12,13,14] 
 
@@ -8,35 +8,35 @@ class Monkey:
         self.rightArm = (rightArmStepper,rightShoulder,rightPalm)
         self.leftArm = (leftArmStepper,leftShoulder,leftPalm)
 
-    def moveLeftArm():
-        leftArm.sweep()
-        leftArm.locateBar()
-        self.degree = leftArm.distToDegree()
-        leftArm.extend(degree)
+    def moveLeftArm(self):
+        self.leftArm.sweep()
+        self.leftArm.locateBar()
+        self.degree = self.leftArm.distToDegree()
+        self.leftArm.extend(self.degree)
 
-    def moveRightArm():
-        rightArm.sweep()
-        rightArm.locateBar()
-        self.degree = rightArm.distToDegree()
-        rightArm.extend(degree)
+    def moveRightArm(self):
+        self.rightArm.sweep()
+        self.rightArm.locateBar()
+        self.degree = self.rightArm.distToDegree()
+        self.rightArm.extend(self.degree)
 
-    def leftToRightTransition():
+    def leftToRightTransition(self):
         #extend left while contracting right
         self.midDegree = self.degree/2 
         for i in range(self.midDegree):
-            leftArm.extend(1)
-            rightArm.contract(1)
+            self.leftArm.extend(1)
+            self.rightArm.contract(1)
 
-    def rightToLeftTransition():
+    def rightToLeftTransition(self):
         #extend right while contracting left
         self.midDegree = self.degree/2 
         for i in range(self.midDegree):
-            rightArm.extend(1)
-            leftArm.contract(1)
+            self.rightArm.extend(1)
+            self.leftArm.contract(1)
 
-    def reset():
-        rightArm.resetArm()
-        leftArm.resetArm()
+    def reset(self):
+        self.rightArm.resetArm()
+        self.leftArm.resetArm()
     
 
 

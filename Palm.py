@@ -3,48 +3,54 @@
 # By: Sawyer Paccione
 # Completed: TBD
 #
-# Description: Controlling the DC Motor and Lidar in the Palm of a Robot
+# Description: Controlling the Stepper Motor and Lidar in the Palm of a Robot
 
-from electronics.DCMotorEncoder.DCMotor_encoder import DCMotorEncoder
 import time 
+import board
+import busio
+from adafruit_servokit import ServoKit
+
+import adafruit_vl53l0x
 
 class Palm:
     '''
     Controlling the DC Motor and Lidar in the Palm of a Robot
     '''
 
-    def __init__(self):
+    def __init__(self, servoPin=0, servoKit=ServoKit(channels=16)):
         '''
         Initialize our palm
         '''
-
-        self.motor = DCMotorEncoder(33, 32, 31, 29, 'BOARD')
+        # Initialize Servo Motor That will be controlling Open/Close
+        self.servoKit = servoKit # Should be provided from a parent class
+        self.fingers = self.servoKit.servo[servoPin] # Set Finger Servo
+        self._angle = 0 #
         
-        self._bestDist = 2500
-
-        self._distance = None
-        self._angle = 0
+        # Initialize the lidar TOF sensor
+        self.i2c = busio.I2C(board.SCL, board.SDA)
+        self.vl53 = adafruit_vl53l0x.VL53L0X(self.i2c)
+        self._distance = self.vl53.range
 
     def close(self):
         '''
         Close the Palm
         '''
-        self.motor.run_to_position(self._bestDist)
+        self._angle = 0
 
     def open(self):
         '''
         Open the palm
         '''
-        self.motor.run_to_position(0)
+        self._angle = 90
 
     @property
     def distance(self):
         print("Getting Distance Value")
+        self._distance = self.vl53.range
         return self._distance
 
     @distance.setter
     def distance(self, value):
-        print("Why are you setting the value of your Lidar")
         if isinstance(value, int):
             raise ValueError("Distance should be an integer value")
         elif value < 0:
@@ -58,9 +64,37 @@ class Palm:
     def distance(self):
         del self._distance
 
+    @property
+    def angle(self):
+        print("Getting Angle Value")
+        return self._angle
+
+    @angle.setter
+    def angle(self, value):
+        if isinstance(value, int):
+            raise ValueError("angle should be an integer value")
+        elif value < 0:
+            raise ValueError("Angle Below 0 is Impossible")
+        elif value > 180:
+            raise ValueError("Angle Above 180 is Impossible")
+        else:
+            self._angle = value
+            self.fingers.angle = self._angle
+
+    @angle.deleter
+    def angle(self):
+        del self._angle
+
 
 if __name__ == "__main__":
     p = Palm()
-    p.close()
-    time.sleep(1)
-    p.open()
+
+    while True:
+        print("Closing Palm")
+        p.close()
+        print(p._angle)
+        time.sleep(1)
+        print("Opening Palm")
+        print(p._angle)
+        p.open()
+        time.sleep(1)
