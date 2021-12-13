@@ -1,12 +1,17 @@
+# Tufts University, Fall 2021
+# Monkey.py
+# By: Sawyer Paccione, Olivia Tomassetti
+# Completed: TBD
+#
+# Description: Controlling the the Arm Class
+
 from Arm import Arm 
-
-rightArmStepper = [11,12,13,14] 
-
+import time
 
 class Monkey:
     def __init__(self,rightArmStepper,rightShoulder,rightPalm,leftArmStepper,leftShoulder,leftPalm):
-        self.rightArm = (rightArmStepper,rightShoulder,rightPalm)
-        self.leftArm = (leftArmStepper,leftShoulder,leftPalm)
+        self.rightArm = Arm(rightArmStepper,rightShoulder,rightPalm)
+        self.leftArm = Arm(leftArmStepper,leftShoulder,leftPalm)
 
     def moveLeftArm(self):
         self.leftArm.sweep()
@@ -38,6 +43,22 @@ class Monkey:
         self.rightArm.resetArm()
         self.leftArm.resetArm()
     
+if __name__ == "__main__":
+    rightArmStepper = [6,13,19,26] 
+    rightShoulder = 0
+    rightPalm = 1
+    leftArmStepper = [17,27,22,23]
+    leftShoulder = 2
+    leftPalm = 3
+    
+    monkeyBot = Monkey(rightArmStepper,rightShoulder,rightPalm,leftArmStepper,leftShoulder,leftPalm)
+    #monkeyBot.reset()
+    time.sleep(1)
+    monkeyBot.moveRightArm()
+    time.sleep(1)
+
+
+
 
 
  
