@@ -107,6 +107,14 @@ class Arm:
             self.distances.append(lidarReading)
             self.angle += 5
             time.sleep(0.2)
+
+    def sweepForward():
+        if (self.angle < 175):
+            self.shldrServo.angle += 5
+
+    def sweepBack():
+        if (self.angle > 5):
+            self.shldrServo.angle -= 5
     
     def resetArm(self):
         '''
@@ -114,8 +122,8 @@ class Arm:
         '''
         self.shldrServo.angle = 0
         #open and close palm
-        self.palm.open()
         self.palm.close()
+        
 
 
 
